@@ -15,15 +15,17 @@ __status__ = "Production"
 # Factory tarball
 # http://dev.racf.bnl.gov/dist/src/tgz/autopyfactory-2.4.10.tar.gz
 import logging
+from ConfigParser import ConfigParser
 
 from optparse import OptionParser
 
 
 class ResourceTool(object):
     
-    def __init__(self):
+    def __init__(self, config):
         self.log = logging.getLogger() 
         self.log.debug('ResourceTool starting...')
+        
         
     
 
@@ -35,7 +37,7 @@ class ResourceToolCLI(object):
         self._parseopts()
 
 
-    def __parseopts(self):
+    def _parseopts(self):
         parser = OptionParser(usage='''%prog [OPTIONS]
 vc3-info-client is a client for the information store for VC3
 

@@ -2,7 +2,7 @@
 cd
 wget http://dev.racf.bnl.gov/dist/src/tgz/vc3-resource-tool-0.9.1.tar.gz
 tar -xvzf vc3-resource-tool-0.9.1.tar.gz
-cd vc3-resource-tool
+cd vc3-resource-tool-0.9.1
 python setup.py install --home=~/
 vc3-resource-tool init -s <infoserverurl> -r <resourceid> -u <vc3user> -p <pairing-pin>
 
