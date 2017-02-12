@@ -9,9 +9,6 @@ __maintainer__ = "John Hover"
 __email__ = "jhover@bnl.gov"
 __status__ = "Production"
 
-#
-#  https://github.com/PanDAWMS/autopyfactory/archive/master.zip
-
 # Factory tarball
 # http://dev.racf.bnl.gov/dist/src/tgz/autopyfactory-2.4.10.tar.gz
 import logging
@@ -35,6 +32,7 @@ class ResourceToolCLI(object):
         self.log = logging.getLogger()
         self.log.debug('ResourceToolCLI starting...')
         self._parseopts()
+        
 
 
     def _parseopts(self):
