@@ -18,7 +18,7 @@ setup(
     author_email='jhover@bnl.gov',
     maintainer_email='jhover@bnl.gov',
     url='https://github.com/vc3-project',
-    packages=[ 'vc3',
+    packages=[ 'vc3tool',
               ],
     classifiers=[
           'Development Status :: 3 - Beta',
