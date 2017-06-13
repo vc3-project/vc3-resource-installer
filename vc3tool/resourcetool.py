@@ -16,6 +16,7 @@ from ConfigParser import ConfigParser
 
 from optparse import OptionParser
 
+from  vc3infoservice.infoclient import InfoClient 
 
 class ResourceTool(object):
     
