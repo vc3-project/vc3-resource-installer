@@ -2,7 +2,7 @@
 #
 # Thin python library executable
 #
-EXEPKG=vc3
+EXEPKG=vc3tool
 EXEBIN=resourcetool.py
 
 ########## Do not edit below this line #############
