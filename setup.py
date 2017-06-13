@@ -5,7 +5,7 @@
 import sys
 from distutils.core import setup
 
-from vc3 import resourcetool
+from vc3tool import resourcetool
 release_version=resourcetool.__version__
 
 setup(
