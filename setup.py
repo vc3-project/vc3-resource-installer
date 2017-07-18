@@ -29,7 +29,7 @@ setup(
           'Programming Language :: Python',
           'Topic :: System Administration :: Management',
     ],
-    scripts=[ 'scripts/vc3-resource-tool',
+    scripts=[ 'scripts/vc3',
              ],
     data_files=[ 
                 #('share/certify', 
