@@ -12,7 +12,9 @@ __status__ = "Production"
 # Factory tarball
 # http://dev.racf.bnl.gov/dist/src/tgz/autopyfactory-2.4.10.tar.gz
 import os
+import sys
 import logging
+from urlparse import urlparse
 from optparse import OptionParser
 from ConfigParser import SafeConfigParser
 from vc3client.client import VC3ClientAPI, InfoMissingPairingException
@@ -59,6 +61,7 @@ class ResourceTool(object):
 class ResourceToolCLI(object):
     
     def __init__(self):
+        logging.basicConfig()
         self.log = logging.getLogger()
         self.log.debug('ResourceToolCLI starting...')
         self._parseopts()
@@ -94,7 +97,7 @@ John Hover <jhover@bnl.gov>
         parser.add_option("-s", "--infoserver", 
                           dest="infoserver", 
                           default="dev.virtualclusters.org:20333",
-                          action="store_true", 
+                          action="store", 
                           help="URL of central VC3 server")
         parser.add_option("--quiet", dest="logLevel", 
                           default=logging.WARNING,
@@ -121,9 +124,11 @@ John Hover <jhover@bnl.gov>
             config.read(os.path.expanduser(self.options.configpath))
 
         if self.options.infoserver:
-            (host, port) = self.options.infoserver.split(':')
-            if not port:
-                port = '20334'
+            try:
+                (host, port) = self.options.infoserver.split(':')
+            except ValueError:
+                self.log.error("Missing port in hostname.")
+                sys.exit(1)
 
             config.add_section('netcomm')
             config.set('netcomm', 'httpport',  '20333')
@@ -135,4 +140,5 @@ John Hover <jhover@bnl.gov>
     
 if __name__ == '__main__':
     rtc = ResourceToolCLI()
+
        
