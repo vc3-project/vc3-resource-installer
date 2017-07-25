@@ -13,6 +13,7 @@ __status__ = "Production"
 # http://dev.racf.bnl.gov/dist/src/tgz/autopyfactory-2.4.10.tar.gz
 import os
 import sys
+import errno
 import logging
 from urlparse import urlparse
 from optparse import OptionParser
@@ -29,34 +30,51 @@ class ResourceTool(object):
         self.options = options
 
         self.client = VC3ClientAPI(self.config)
-
-        #self.certfile = self.options.cert;
-        #self.keyfile  = self.options.key;
-
         self.write_keys()
 
     def  write_keys(self):
         try:
                 (cert, key) = self.client.getPairing(self.options.pin)
-                print(cert)
-                print("")
-                print(key)
-                #certpath = os.path.expanduser(options.certfile)
-                #keypath = os.path.expanduser(options.keyfile)
-                #cf = open(certpath, 'w')
-                #cf.write(cert)
-                #cf.close()
-                #if os.path.isfile(keypath):
-                #    os.remove(keypath)
-                #original_umask = os.umask(0o177)  # 0o777 ^ 0o600
-                #try:
-                #    kf = os.fdopen(os.open(keypath, os.O_WRONLY | os.O_CREAT, 0o600), 'w')
-                #finally:
-                #    os.umask(original_umask)
-                #kf.write(self.key)
-                #kf.close()                
+                localdir    = os.path.expanduser(self.options.localdir)
+
+                try:
+                    os.makedirs(localdir)
+                except OSError as e:
+                    if e.errno != errno.EEXIST:
+                        self.log.error("Could not create directory '%s': %s" % (localdir, str(e)))
+                        sys.exit(1)
+
+                certpath = os.path.join(localdir, 'vc3cert.pem')
+                keypath  = os.path.join(localdir, 'vc3key.pem')
+
+                try:
+                    cf = open(certpath, 'w')
+                    cf.write(cert)
+                    cf.close()
+                except Exception as e:
+                    print("Could not write certificate file '%s': %s" % certpath, str(e))
+
+                try:
+                    if os.path.isfile(keypath):
+                        os.remove(keypath)
+
+                    original_umask = os.umask(0o177)  # 0o777 ^ 0o600
+                    try:
+                        kf = os.fdopen(os.open(keypath, os.O_WRONLY | os.O_CREAT, 0o600), 'w')
+                        kf.write(key)
+                        kf.close()                
+                    finally:
+                        os.umask(original_umask)
+
+                    kf = open(certpath, 'w')
+                    kf.write(cert)
+                    kf.close()
+                except Exception as e:
+                    print("Could not write key file '%s': %s" % (keypath, str(e)))
+
         except InfoMissingPairingException:
             print("Invalid pairing code or not satisfied yet. Try in 30 seconds.")   
+            sys.exit(1)
 
 class ResourceToolCLI(object):
     
@@ -99,6 +117,11 @@ John Hover <jhover@bnl.gov>
                           default="dev.virtualclusters.org:20333",
                           action="store", 
                           help="URL of central VC3 server")
+        parser.add_option("-l", "--localdir", 
+                          dest="localdir", 
+                          default="~/vc3-services/etc",
+                          action="store", 
+                          help="Directory to which certs and keys are written.")
         parser.add_option("--quiet", dest="logLevel", 
                           default=logging.WARNING,
                           action="store_const", 
