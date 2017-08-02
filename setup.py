@@ -3,7 +3,7 @@
 # Setup prog for Certify certificate management utility
 
 import sys
-from distutils.core import setup
+from setuptools import setup
 
 from vc3tool import resourcetool
 release_version=resourcetool.__version__
