@@ -17,7 +17,7 @@ import errno
 import logging
 from urlparse import urlparse
 from optparse import OptionParser
-from ConfigParser import SafeConfigParser
+from ConfigParser import SafeConfigParser, DuplicateSectionError
 from vc3client.client import VC3ClientAPI, InfoMissingPairingException
 
 class ResourceTool(object):
@@ -153,10 +153,13 @@ John Hover <jhover@bnl.gov>
                 self.log.error("Missing port in hostname.")
                 sys.exit(1)
 
-            config.add_section('netcomm')
-            config.set('netcomm', 'httpport',  '20333')
-            config.set('netcomm', 'httpsport', port)
-            config.set('netcomm', 'infohost',  host)
+            try:
+                config.add_section('netcomm')
+                config.set('netcomm', 'httpport',  '20333')
+                config.set('netcomm', 'httpsport', port)
+                config.set('netcomm', 'infohost',  host)
+            except DuplicateSectionError:
+                pass
 
         r = ResourceTool(config, self.options)
 
