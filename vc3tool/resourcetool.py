@@ -114,7 +114,7 @@ John Hover <jhover@bnl.gov>
                           help="Set logging level to INFO [default WARNING]")
         parser.add_option("-s", "--infoserver", 
                           dest="infoserver", 
-                          default="dev.virtualclusters.org:20333",
+                          default="localhost:20334",
                           action="store", 
                           help="URL of central VC3 server")
         parser.add_option("-l", "--localdir", 
